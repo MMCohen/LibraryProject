@@ -132,6 +132,14 @@ total_borrows AUTO_INCREMENT? how does it work?
 ---
 
 # system rules:
-1. creating book - 
+1. Creating book - the user sends 1. title. 2. genre. 3. author. the system adds is_available=True, borrowed_by=NULL.
+2. Genre - must be one from the: (Fiction, Non-Fiction, Science, History, Other)
+3. Add member - the user sends 1. name. 2. email. the system adds is_active = True. total_borrows = 0.
+4. Email - must be unique.
+5. Inactive member - cannot borrow books.
+6. Unavailable book - cannot be borrowed.
+7. Max borrow - member can not borrow more than 3 books.
+8. Return book - can be return only from the member that borrow the book.
+
 
 end
