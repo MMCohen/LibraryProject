@@ -118,6 +118,20 @@ total_borrows AUTO_INCREMENT? how does it work?
 * `count_borrwed_books(genre)` - count borrowed books by genre
 * `count_active_borrows_by_member(member_id)` - returns how many books are borrowed by member_id
 
-# system rules ???
+### MemberDB.py
+* `create_member(data)` - insert new member. default is_active=True, total_borrows=0
+* `get_all_members()` - returns all members
+* `get_member_by_id(id)` - return member by id | None
+* `update_member(id, data)` - update member with the data that has been sent.
+* `deactivate_member(id)` - update is_active=False
+* `activate_member(id)` - update is_active=True
+* `increment_borrows(id)` - add 1 to borrowed book
+* `count_active_members()` - count members with is_active = True
+* `get_top_member()` - get the member with biggest borrowed books 
+
+---
+
+# system rules:
+1. creating book - 
 
 end
