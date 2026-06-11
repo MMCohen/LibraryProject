@@ -141,5 +141,23 @@ total_borrows AUTO_INCREMENT? how does it work?
 7. Max borrow - member can not borrow more than 3 books.
 8. Return book - can be return only from the member that borrow the book.
 
+---
+## Books endpoints:
+
+| Endpoint                       | Method    | Description    | Request Body                                                                                   | Response                  |
+|--------------------------------|-----------|----------------|------------------------------------------------------------------------------------------------|---------------------------|
+| /books                         | POST      | create book    | {title: str, genre: str, author: str}                                                          | new id. code=201          |
+| /books                         | GET       | get all books  | None                                                                                           | list of books code=200    | 
+| /books/{id}                    | GET       | get book by id | None                                                                                           | dict of book code=200/404 |
+| /books/{id}                    | PATCH/PUT | update book    | only the data you want to chang. don't neet all of them: {title: str, genre: str, author: str} | 200/422/400               |
+| /books/{id}/borrow/{member_id} | PATCH/PUT | borrow book    | None                                                                                           | 200/400                   |
+| /books/{id}/return/{member_id} | PATCH/PUT | return book    | None                                                                                           | 200/400                   |
+
+## Members endpoints:
+
+| Endpoint                       | Method    | Description    | Request Body | Response |
+|--------------------------------|-----------|----------------|--------------|----------|
+|                                |           |                |              |          |
+|                                |           |                |              |          |
 
 end
