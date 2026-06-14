@@ -40,8 +40,8 @@ ___
 ### create docker container
 
 code:
-```dockerfile
-docker run --name mysql-w7 \ -e MYSQL_ROOT_PASSWORD=root \ -e MYSQL_DATABASE=soldiers_db \ -p 3306:3306 \ -d mysql:8 
+```
+docker run --name mysql-w7 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=library_db -p 3306:3306 -d mysql:8  
 ```
 
 ---
@@ -97,7 +97,7 @@ total_borrows AUTO_INCREMENT? how does it work?
 | name          | varchar(50) | NOT NULL         | member name                    |
 | email         | TINYTEXT    | NOT NULL, UNIQUE | member email. must be unique   |
 | is_active     | BOOLEAN     | NOT NULL         | True for active member         |
-| total_borrows | INT         | AUTO_INCREMENT   | how many books member borrowed |
+| total_borrows | INT         |                  | how many books member borrowed |
 
 ---
 
@@ -146,18 +146,67 @@ total_borrows AUTO_INCREMENT? how does it work?
 
 | Endpoint                       | Method    | Description    | Request Body                                                                                   | Response                  |
 |--------------------------------|-----------|----------------|------------------------------------------------------------------------------------------------|---------------------------|
-| /books                         | POST      | create book    | {title: str, genre: str, author: str}                                                          | new id. code=201          |
-| /books                         | GET       | get all books  | None                                                                                           | list of books code=200    | 
-| /books/{id}                    | GET       | get book by id | None                                                                                           | dict of book code=200/404 |
-| /books/{id}                    | PATCH/PUT | update book    | only the data you want to chang. don't neet all of them: {title: str, genre: str, author: str} | 200/422/400               |
-| /books/{id}/borrow/{member_id} | PATCH/PUT | borrow book    | None                                                                                           | 200/400                   |
-| /books/{id}/return/{member_id} | PATCH/PUT | return book    | None                                                                                           | 200/400                   |
+| `/books`                         | POST      | create book    | {title: str, genre: str, author: str}                                                          | new id. code=201          |
+| `/books`                         | GET       | get all books  | None                                                                                           | list of books code=200    | 
+| `/books/{id}`                    | GET       | get book by id | None                                                                                           | dict of book code=200/404 |
+| `/books/{id}`                    | PATCH/PUT | update book    | only the data you want to chang. don't neet all of them: {title: str, genre: str, author: str} | 200/422/400               |
+| `/books/{id}/borrow/{member_id}` | PATCH/PUT | borrow book    | None                                                                                           | 200/400                   |
+| `/books/{id}/return/{member_id}` | PATCH/PUT | return book    | None                                                                                           | 200/400                   |
 
 ## Members endpoints:
 
-| Endpoint                       | Method    | Description    | Request Body | Response |
-|--------------------------------|-----------|----------------|--------------|----------|
-|                                |           |                |              |          |
-|                                |           |                |              |          |
+| Endpoint                 | Method    | Description             | Request Body                                           | Response                         |
+|--------------------------|-----------|-------------------------|--------------------------------------------------------|----------------------------------|
+| `/members`                 | POST      | add member              | {name: str, email: str}                                | new id. code = 201               |
+| `/members`                 | GET       | get all members         | None                                                   | list of member dicts. code = 200 |
+| `/members/{id}/deactivate` | GET       | deactivate member by id | None                                                   | 200/400                          |
+| `/members/{id}/activate`   | PUT/PATCH | activate member by id   | None                                                   |                                  |
+| `/members/{id}`            | GET       | get member by id        | None                                                   | 200/404                          |
+| `/members/{id}`            | PUT/PATCH | update member by id     | only fields you want to update {name: str, email: str} | 200/400/422                      |
+
+## Reports endpoints:
+
+| Endpoint                  | Method | Description                             | Request Body | Response |
+|---------------------------|--------|-----------------------------------------|--------------|----------|
+| `/reports/summary`        | GET    | get summary report on books and members | None         | 200      |
+| `/reports/books-by-genre` | GET    | get report by genre                     | None         | 200      |
+| `/reports/top-member `    | GET    | get report on top member                | None         | 200      |
+
+```
+/reports/summary
+
+{"total_books": 0,
+"available_books": 0,
+"currently_borrowed": 0,
+"active_members": 0}
+```
+```
+/reports/books-by-genre
+
+[{"Genre": "Science", "COUNT": 3}, {"Genre": "History", "COUNT": 2}]
+```
+```
+/reports/top-member
+
+{"member_id": 1, "borrowed": 5}
+```
+
+---
+
+## how to use the system:
+first time only:
+1. pul my sql image with: ```docker pull mysql:latest```
+2. run the container with: ```docker run --name mysql-library -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=library_db -p 3306:3306 -d mysql:8 ```
+3. clone the repository from: ```git clone https://www.example.com/```
+4. continue with every day use.
+
+every day use:
+1. start the container with: ```docker start mysql-library```
+2. open main.py file and run it.
+3. go to http://127.0.0.1:8000/docs and see all the library management potions.
+
+
+
+
 
 end
