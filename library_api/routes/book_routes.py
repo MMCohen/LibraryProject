@@ -1,16 +1,31 @@
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from library_api.database.book_db import BookDb
 
 bookdb = BookDb()
 
-
-
 router = APIRouter()
+
+class NewBook(BaseModel):
+    title: str
+    author: str
+    genre: str
+
 
 @router.get("/books")
 def get_all_books():
     return bookdb.get_all_books()
+
+
+@router.post("/books")
+def create_book(data: NewBook):
+    data = data.model_dump()
+
+    if data["genre"] not in ('Fiction', 'Non-Fiction', 'Science', 'History', 'Other'):
+        raise HTTPException(status_code=400, detail="genre must be from: Fiction, Non-Fiction, Science, History, Other")
+
+    return bookdb.create_book(data)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ import uvicorn
 
 from database.db_connection import create_tables
 from fastapi import FastAPI
-from routes import book_routes, member_routes, report_routes
+from library_api.routes import book_routes, member_routes, report_routes
 
 
 create_tables()
