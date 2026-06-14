@@ -144,8 +144,8 @@ total_borrows AUTO_INCREMENT? how does it work?
 ---
 ## Books endpoints:
 
-| Endpoint                       | Method    | Description    | Request Body                                                                                   | Response                  |
-|--------------------------------|-----------|----------------|------------------------------------------------------------------------------------------------|---------------------------|
+| Endpoint                         | Method    | Description    | Request Body                                                                                   | Response                  |
+|----------------------------------|-----------|----------------|------------------------------------------------------------------------------------------------|---------------------------|
 | `/books`                         | POST      | create book    | {title: str, genre: str, author: str}                                                          | new id. code=201          |
 | `/books`                         | GET       | get all books  | None                                                                                           | list of books code=200    | 
 | `/books/{id}`                    | GET       | get book by id | None                                                                                           | dict of book code=200/404 |
@@ -196,7 +196,7 @@ total_borrows AUTO_INCREMENT? how does it work?
 ## how to use the system:
 first time only:
 1. pul my sql image with: ```docker pull mysql:latest```
-2. run the container with: ```docker run --name mysql-library -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=library_db -p 3306:3306 -d mysql:8 ```
+2. run the container with: ```docker run --name mysql-library -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=library_db -p 3306:3306 -d mysql:latest ```
 3. clone the repository from: ```git clone https://www.example.com/```
 4. continue with every day use.
 
@@ -204,6 +204,7 @@ every day use:
 1. start the container with: ```docker start mysql-library```
 2. open main.py file and run it.
 3. go to http://127.0.0.1:8000/docs and see all the library management potions.
+4. if you want to enter to the database manually using shell, use this command: ```docker exec -it mysql-library mysql -uroot -psecret```
 
 
 
