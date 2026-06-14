@@ -3,6 +3,7 @@ BookDb class try
 """
 
 from library_api.database.db_connection import DbConnection
+import mysql.connector
 
 
 
@@ -59,8 +60,36 @@ class BookDb:
 
         return data
 
-    def update_book(self, id, data):
-        pass
+    def update_book(self, id, data: dict) -> bool:
+        """
+        update book in the sql database
+        :param id: int
+        :param data: dict
+        :return: True if rowcount > 0
+        """
+        connector = self.connector.get_connection()
+        cursor = connector.cursor()
+        try:
+            dict_keys = ", ".join([f"{key} = %s" for key in data.keys()])
+            sql_txt = list(data.values()) + [id]
+
+            cursor.execute(f"""
+            UPDATE books
+            SET {dict_keys}
+            WHERE id = %s;
+            """, sql_txt)
+
+            is_update = cursor.rowcount > 0
+
+            connector.commit()
+        except ValueError as e:
+            raise e
+
+        finally:
+            cursor.close()
+            connector.close()
+
+        return is_update
 
     def set_available(self, id, val, member_id):
         pass
@@ -91,4 +120,6 @@ if __name__ == "__main__":
     # print(book.get_all_books())
 
     # print(book.get_book_by_id(6))
+
+    print(book.update_book(3, {"author": "ttt"}))
 

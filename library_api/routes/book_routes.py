@@ -1,6 +1,7 @@
-
+import uvicorn
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import Literal
 from library_api.database.book_db import BookDb
 from library_api.database.db_connection import DbConnection
 
@@ -12,13 +13,13 @@ router = APIRouter()
 class NewBook(BaseModel):
     title: str
     author: str
-    genre: str
+    genre: Literal["Fiction", "Non-Fiction", "Science", "History", "Other"]
 
 
 class UpdateBook(BaseModel):
-    title: str = None
-    author: str = None
-    genre: str = None
+    title: str | None = None
+    author: str | None = None
+    genre: Literal["Fiction", "Non-Fiction", "Science", "History", "Other"] | None = None
 
 
 @router.get("/books")
@@ -29,10 +30,6 @@ def get_all_books():
 @router.post("/books")
 def create_book(data: NewBook):
     data = data.model_dump()
-
-    if data["genre"] not in ('Fiction', 'Non-Fiction', 'Science', 'History', 'Other'):
-        raise HTTPException(status_code=400, detail="genre must be from: Fiction, Non-Fiction, Science, History, Other")
-
     return bookdb.create_book(data)
 
 
@@ -46,11 +43,18 @@ def get_book_by_id(id):
 
 
 @router.put("/books/{id}")
-def update_book_by_id(id, data: UpdateBook):
-    is_update = bookdb.update_book(id, data.model_dump(exclude_none=True))
+def update_book_by_id(id: int, data: UpdateBook):
+    update_data = data.model_dump(exclude_unset=True)
+
+    if not update_data:
+        raise HTTPException(status_code=400 , detail="no data entered to update")
+
+    is_update = bookdb.update_book(id, update_data)
+
     if not is_update:
-        raise HTTPException(status_code=400, detail="could not be updated")
-    return is_update
+        raise HTTPException(status_code=404, detail="Book not found or not updated")
+
+    return {"message": "updated successfully"}
 
 
 
