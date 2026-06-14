@@ -24,4 +24,6 @@ def create_member(data: NewMember):
     return {"new_id": new_id}
 
 
-
+@router.get("/members")
+def get_all_members():
+    return member_db.get_all_members()

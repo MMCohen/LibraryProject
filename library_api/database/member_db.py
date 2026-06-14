@@ -11,7 +11,12 @@ class MemberDb:
         self.connector = connection
 
 
-    def create_member(self, data: dict):
+    def create_member(self, data: dict) -> int:
+        """
+        create a new member
+        :param data: dict
+        :return: int the id of the new member
+        """
         connector = self.connector.get_connection()
         cursor = connector.cursor()
 
@@ -39,8 +44,20 @@ class MemberDb:
         return new_id
 
 
-    def get_all_members(self):
-        pass
+    def get_all_members(self) -> list[dict | None]:
+        """
+        :return: a list with all members details
+        """
+        connection = self.connector.get_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM members;")
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return data
 
 
     def get_member_by_id(self, id):
