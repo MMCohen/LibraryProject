@@ -1,0 +1,16 @@
+import uvicorn
+
+from database.db_connection import create_tables
+from fastapi import FastAPI
+from routes import book_routes, member_routes, report_routes
+
+
+create_tables()
+
+app = FastAPI()
+
+app.include_router(book_routes.router)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)
+
