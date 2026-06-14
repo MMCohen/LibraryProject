@@ -48,6 +48,10 @@ class BookDb:
 
         cursor.execute("SELECT * FROM books WHERE id = %s;", (id,))
         data = cursor.fetchone()
+
+        cursor.close()
+        connector.close()
+
         return data
 
     def update_book(self, id, data):
