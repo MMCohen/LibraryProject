@@ -61,7 +61,17 @@ class MemberDb:
 
 
     def get_member_by_id(self, id):
-        pass
+        connector = self.connector.get_connection()
+        cursor = connector.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM members WHERE id = %s;", (id,))
+        member = cursor.fetchone()
+
+        cursor.close()
+        connector.close()
+
+        return member
+
 
 
     def update_member(self, id, data):
@@ -91,5 +101,7 @@ class MemberDb:
 if __name__ == "__main__":
     connector = DbConnection()
     member = MemberDb(connector)
-    new_member = {"name": "meir", "email": "meir@gmail.com"}
-    print(member.create_member(new_member))
+    # new_member = {"name": "meir", "email": "meir@gmail.com"}
+    # print(member.create_member(new_member))
+
+    print(member.get_member_by_id(9))

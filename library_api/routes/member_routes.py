@@ -27,3 +27,11 @@ def create_member(data: NewMember):
 @router.get("/members")
 def get_all_members():
     return member_db.get_all_members()
+
+
+@router.get("/members/{id}")
+def get_member_by_id(id: int):
+    member =  member_db.get_member_by_id(id)
+    if not member:
+        raise HTTPException(status_code=404, detail=f"member id: {id} not found!")
+    return member
