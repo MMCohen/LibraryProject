@@ -36,9 +36,9 @@ class DbConnection:
         member_table = """CREATE TABLE IF NOT EXISTS members(
         id INT PRIMARY KEY AUTO_INCREMENT,
         name varchar(50) NOT NULL,
-        email varchar(50) UNIQUE NOT NULL,
-        is_active BOOLEAN NOT NULL,
-        total_borrows INT NOT NULL
+        email varchar(255) UNIQUE NOT NULL,
+        is_active BOOLEAN NOT NULL DEFAULT 1,
+        total_borrows INT NOT NULL DEFAULT 0
         );
     
             """
