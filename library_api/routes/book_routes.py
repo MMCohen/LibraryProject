@@ -2,8 +2,10 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from library_api.database.book_db import BookDb
+from library_api.database.db_connection import DbConnection
 
-bookdb = BookDb()
+connection = DbConnection()
+bookdb = BookDb(connection)
 
 router = APIRouter()
 
@@ -44,10 +46,11 @@ def get_book_by_id(id):
 
 
 @router.put("/books/{id}")
-def get_book_by_id(id, data: UpdateBook):
+def update_book_by_id(id, data: UpdateBook):
     is_update = bookdb.update_book(id, data.model_dump(exclude_none=True))
     if not is_update:
-        pass
+        raise HTTPException(status_code=400, detail="could not be updated")
+    return is_update
 
 
 

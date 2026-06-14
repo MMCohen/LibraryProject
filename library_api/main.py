@@ -7,7 +7,6 @@ from library_api.routes import book_routes, member_routes, report_routes
 connector = DbConnection()
 connector.create_tables()
 
-create_tables()
 
 app = FastAPI()
 

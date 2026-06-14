@@ -4,16 +4,15 @@ BookDb class try
 
 from library_api.database.db_connection import DbConnection
 
-connector = DbConnection()
 
 
 class BookDb:
     def __init__(self, connection: DbConnection):
-        self.connector = connection.get_connection()
+        self.connector = connection
 
 
     def create_book(self, data):
-        connector = self.connector
+        connector = self.connector.get_connection()
         cursor = connector.cursor()
 
         sql_txt = """
@@ -37,7 +36,7 @@ class BookDb:
         """
         :return: list of dicts of all books
         """
-        connector = self.connector
+        connector = self.connector.get_connection()
         cursor = connector.cursor(dictionary=True)
 
         cursor.execute("SELECT * FROM books;")
@@ -49,7 +48,7 @@ class BookDb:
 
 
     def get_book_by_id(self, id):
-        connector = self.connector
+        connector = self.connector.get_connection()
         cursor = connector.cursor(dictionary=True)
 
         cursor.execute("SELECT * FROM books WHERE id = %s;", (id,))
@@ -82,6 +81,8 @@ class BookDb:
         pass
 
 if __name__ == "__main__":
+    connector = DbConnection()
+
     book = BookDb(connector)
 
     # new_book = {"title": "try", "author": "try", "genre": "other"}
