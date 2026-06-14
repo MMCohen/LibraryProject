@@ -1,9 +1,11 @@
 import uvicorn
 
-from database.db_connection import create_tables
+from database.db_connection import DbConnection
 from fastapi import FastAPI
 from library_api.routes import book_routes, member_routes, report_routes
 
+connector = DbConnection()
+connector.create_tables()
 
 create_tables()
 

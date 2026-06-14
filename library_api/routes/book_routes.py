@@ -13,6 +13,12 @@ class NewBook(BaseModel):
     genre: str
 
 
+class UpdateBook(BaseModel):
+    title: str = None
+    author: str = None
+    genre: str = None
+
+
 @router.get("/books")
 def get_all_books():
     return bookdb.get_all_books()
@@ -35,6 +41,15 @@ def get_book_by_id(id):
         raise HTTPException(status_code=404, detail=f"book id: {id} not found!")
     else:
         return book
+
+
+@router.put("/books/{id}")
+def get_book_by_id(id, data: UpdateBook):
+    is_update = bookdb.update_book(id, data.model_dump(exclude_none=True))
+    if not is_update:
+        pass
+
+
 
 if __name__ == "__main__":
     print("hello from book routs")
