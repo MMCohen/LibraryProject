@@ -43,7 +43,12 @@ class BookDb:
 
 
     def get_book_by_id(self, id):
-        pass
+        connector = get_connection()
+        cursor = connector.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM books WHERE id = %s;", (id,))
+        data = cursor.fetchone()
+        return data
 
     def update_book(self, id, data):
         pass
@@ -68,7 +73,11 @@ class BookDb:
 
 if __name__ == "__main__":
     book = BookDb()
-    new_book = {"title": "try", "author": "try", "genre": "other"}
-    print(book.create_book(new_book))
-    print(book.get_all_books())
+
+    # new_book = {"title": "try", "author": "try", "genre": "other"}
+    # print(book.create_book(new_book))
+
+    # print(book.get_all_books())
+
+    # print(book.get_book_by_id(6))
 

@@ -28,5 +28,13 @@ def create_book(data: NewBook):
     return bookdb.create_book(data)
 
 
+@router.get("/books/{id}")
+def get_book_by_id(id):
+    book = bookdb.get_book_by_id(id)
+    if not book:
+        raise HTTPException(status_code=404, detail=f"book id: {id} not found!")
+    else:
+        return book
+
 if __name__ == "__main__":
     print("hello from book routs")
