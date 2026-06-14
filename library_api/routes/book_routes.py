@@ -57,6 +57,16 @@ def update_book_by_id(id: int, data: UpdateBook):
     return {"message": "updated successfully"}
 
 
+@router.put("/books/{id}/borrow/{member_id}")
+def borrow_book(id: int, member_id: int):
+    pass
+
+
+@router.put("/books/{id}/return/{member_id}")
+def return_book(id: int, member_id: int):
+    pass
+
+
 
 if __name__ == "__main__":
     print("hello from book routs")

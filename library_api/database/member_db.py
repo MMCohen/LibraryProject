@@ -1,12 +1,42 @@
 
+from library_api.database.db_connection import DbConnection
+
+
+class EmailExist(Exception):
+    pass
+
 
 class MemberDb:
-    def create_member(self, data):
-        pass
+    def __init__(self, connection: DbConnection):
+        self.connector = connection
 
 
-    def some(self):
-        pass
+    def create_member(self, data: dict):
+        connector = self.connector.get_connection()
+        cursor = connector.cursor()
+
+        # check if email already exist:
+        cursor.execute("SELECT * FROM members WHERE email = %s;", (data["email"],))
+        email_exist = cursor.fetchone()
+        if email_exist:
+            raise EmailExist
+
+        sql_txt = """
+        INSERT INTO members (name, email)
+        VALUES (%s, %s)
+        """
+        sql_vals = (data["name"], data["email"])
+        try:
+            cursor.execute(sql_txt, sql_vals)
+
+            new_id = cursor.lastrowid
+            connector.commit()
+
+        finally:
+            cursor.close()
+            connector.close()
+
+        return new_id
 
 
     def get_all_members(self):
@@ -40,3 +70,9 @@ class MemberDb:
     def get_top_member(self):
         pass
 
+
+if __name__ == "__main__":
+    connector = DbConnection()
+    member = MemberDb(connector)
+    new_member = {"name": "meir", "email": "meir@gmail.com"}
+    print(member.create_member(new_member))
