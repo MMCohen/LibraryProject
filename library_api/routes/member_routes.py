@@ -67,6 +67,20 @@ def deactivate_member(id: int):
     raise HTTPException(status_code=400, detail="somthing went wrong")
 
 
+@router.put("/members/{id}/activate")
+def activate_member(id: int):
+    try:
+        is_activate = member_db.activate_member(id)
+
+    except MemberNotExist:  #todo: maybe add exception MemberAlreadyActivate
+        raise HTTPException(status_code=404, detail=f"Member id {id} not found!")
+
+    if is_activate:
+        return {"Message": f"member id {id} activate successfully"}
+
+    raise HTTPException(status_code=400, detail="somthing went wrong")
+
+
 
 
 

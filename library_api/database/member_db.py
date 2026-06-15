@@ -120,7 +120,17 @@ class MemberDb:
 
 
     def activate_member(self, id):
-        pass
+        """
+        activate member using the update_member func.
+        :param id:
+        :return:
+        """
+
+        is_id_exists = self.is_id_exist(id) # will rais MemberNotExist if not
+
+        is_activate = self.update_member(id, {"is_active": True})
+
+        return is_activate
 
 
     def increment_borrows(self, id):
