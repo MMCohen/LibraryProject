@@ -13,6 +13,10 @@ class NewMember(BaseModel):
     name: str
     email: str
 
+class UpdateMember(BaseModel):
+    name: str = None
+    email: str = None
+
 
 @router.post("/members")
 def create_member(data: NewMember):
@@ -35,3 +39,13 @@ def get_member_by_id(id: int):
     if not member:
         raise HTTPException(status_code=404, detail=f"member id: {id} not found!")
     return member
+
+
+@router.put("/members/{id}")
+def update_member(id: int, data: UpdateMember):
+    update_data = data.model_dump(exclude_unset=True)
+    is_update = member_db.update_member(id, update_data)
+    if not is_update:
+        raise HTTPException(status_code=404, detail="member not found or not updated ")
+    return {"message": "updated successfully"}
+

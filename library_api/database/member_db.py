@@ -74,8 +74,33 @@ class MemberDb:
 
 
 
-    def update_member(self, id, data):
-        pass
+    def update_member(self, id, data: dict):
+        """
+        update member in the sql.
+        :param id: int
+        :param data: dict
+        :return: True if updated. False if not.
+        """
+        connect = self.connector.get_connection()
+        cursor = connect.cursor()
+
+        sql_clause = ", ".join([f"{key} = %s" for key in data.keys()])
+        sql_vals = list(data.values()) + [id]
+
+        cursor.execute(F"""
+        UPDATE members
+        SET {sql_clause}
+        WHERE id = %s;
+        """,
+                       sql_vals)
+
+        is_updated = cursor.rowcount > 0
+        connect.commit()
+
+        cursor.close()
+        connect.close()
+
+        return is_updated
 
 
     def deactivate_member(self, id):
