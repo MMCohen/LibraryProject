@@ -76,7 +76,6 @@ class MemberDb:
         return member
 
 
-
     def update_member(self, id, data: dict):
         """
         update member in the sql.
@@ -107,20 +106,15 @@ class MemberDb:
 
 
     def deactivate_member(self, id):
-
-        connect = self.connector.get_connection()
-        cursor = connect.cursor(dictionary=True)
+        """
+        deactivate member using the update_member func.
+        :param id:
+        :return:
+        """
 
         is_id_exists = self.is_id_exist(id) # will rais MemberNotExist if not
 
-        cursor.execute("UPDATE members SET is_active = False WHERE id = %s;", (id, ))
-
-        is_deactivate = cursor.rowcount > 0
-
-        connect.commit()
-
-        cursor.close()
-        connect.close()
+        is_deactivate = self.update_member(id, {"is_active": False})
 
         return is_deactivate
 
