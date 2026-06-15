@@ -2,7 +2,10 @@
 from library_api.database.db_connection import DbConnection
 
 
-class EmailExist(Exception):
+class EmailNotExist(Exception):
+    pass
+
+class MemberNotExist(Exception):
     pass
 
 
@@ -24,7 +27,7 @@ class MemberDb:
         cursor.execute("SELECT * FROM members WHERE email = %s;", (data["email"],))
         email_exist = cursor.fetchone()
         if email_exist:
-            raise EmailExist
+            raise EmailNotExist
 
         sql_txt = """
         INSERT INTO members (name, email)
@@ -122,6 +125,28 @@ class MemberDb:
     def get_top_member(self):
         pass
 
+    def is_id_exist(self, id: int):
+        """
+        check if id exist raise MemberNotExist if not.
+        True if exists:
+        :param id:
+        :return: True or MemberNotExist error.
+        """
+        connect = self.connector.get_connection()
+        cursor = connect.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM members WHERE id = %s", (id,))
+        member_data = cursor.fetchone()
+
+        cursor.close()
+        connect.close()
+
+        if not member_data:
+            raise MemberNotExist
+        return True
+
+
+
 
 if __name__ == "__main__":
     connector = DbConnection()
@@ -129,4 +154,6 @@ if __name__ == "__main__":
     # new_member = {"name": "meir", "email": "meir@gmail.com"}
     # print(member.create_member(new_member))
 
-    print(member.get_member_by_id(9))
+    # print(member.get_member_by_id(9))
+
+    # print(member.is_id_exist(8))
