@@ -107,7 +107,22 @@ class MemberDb:
 
 
     def deactivate_member(self, id):
-        pass
+
+        connect = self.connector.get_connection()
+        cursor = connect.cursor(dictionary=True)
+
+        is_id_exists = self.is_id_exist(id) # will rais MemberNotExist if not
+
+        cursor.execute("UPDATE members SET is_active = False WHERE id = %s;", (id, ))
+
+        is_deactivate = cursor.rowcount > 0
+
+        connect.commit()
+
+        cursor.close()
+        connect.close()
+
+        return is_deactivate
 
 
     def activate_member(self, id):
@@ -157,3 +172,5 @@ if __name__ == "__main__":
     # print(member.get_member_by_id(9))
 
     # print(member.is_id_exist(8))
+
+    print(member.deactivate_member(6))

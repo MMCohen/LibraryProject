@@ -2,7 +2,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, EmailStr
 
 from library_api.database.db_connection import DbConnection
-from library_api.database.member_db import MemberDb, EmailExist
+from library_api.database.member_db import MemberDb
+
+#import exceptions
+from library_api.database.member_db import EmailNotExist, MemberNotExist
 
 connection = DbConnection()
 member_db = MemberDb(connection)
@@ -23,7 +26,7 @@ def create_member(data: NewMember):
     update_data = data.model_dump()
     try:
         new_id = member_db.create_member(update_data)
-    except EmailExist:
+    except EmailNotExist:
         raise HTTPException(status_code=409, detail="email already exist!")
     return {"new_id": new_id}
 
@@ -48,4 +51,22 @@ def update_member(id: int, data: UpdateMember):
     if not is_update:
         raise HTTPException(status_code=404, detail="member not found or not updated ")
     return {"message": "updated successfully"}
+
+
+@router.put("/members/{id}/deactivate")
+def deactivate_member(id: int):
+    try:
+        is_deactivate = member_db.deactivate_member(id)
+
+    except MemberNotExist:  #todo: maybe add exception MemberAlreadyDeactivate
+        raise HTTPException(status_code=404, detail=f"Member id {id} not found!")
+
+    if is_deactivate:
+        return {"Message": f"member id {id} deactivate"}
+
+    raise HTTPException(status_code=400, detail="somthing went wrong")
+
+
+
+
 
